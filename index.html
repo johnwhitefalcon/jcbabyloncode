@@ -49,10 +49,12 @@
         light1.diffuse = new BABYLON.Color3(1,0,2)
         const light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(1, 1, 1));
         light2.diffuse = new BABYLON.Color3(3,2,2)
+        const light3 = new BABYLON.PointLight("light3", new BABYLON.Vector3(1, 4, 0));
+        light2.diffuse = new BABYLON.Color3(1,0,0)
 
         //This is the section i am having difficulty with. I have tried various combinations of the below.
         
-       const envTex = new BABYLON.CubeTexture("./buildingSpecularHDR.dds", scene);
+       const envTex = new BABYLON.CubeTexture("./sky.env", scene);
        scene.environmentTexture = envTex;
        scene.createDefaultSkybox(envTex, true);
 
@@ -74,11 +76,29 @@
         const ball =  BABYLON.MeshBuilder.CreateSphere("Ball", {diameterX: 5, diameterY: 4, diameterZ: 6})
         ball.position.x = +5;
        
+        var mat = new BABYLON.StandardMaterial("", scene);
+        mat.diffuseTexture = new BABYLON.Texture("./green.jpg", scene);
+
         const plane =  BABYLON.MeshBuilder.CreatePlane("Plane", {height: 10, width: 5})
         plane.rotation = new BABYLON.Vector3(1, 1, 2);
+        plane.material = mat;
+
+        var mat1 = new BABYLON.StandardMaterial("", scene);
+        mat1.diffuseTexture = new BABYLON.Texture("./green.jpg", scene);
+
+        var myPoints = [
+            new BABYLON.Vector3(0, 3, -1),
+            new BABYLON.Vector3(1, 4, -2),
+            new BABYLON.Vector3(2, 5, -3),
+            new BABYLON.Vector3(3, 6, -4),
+            new BABYLON.Vector3(4, 7, -5),
+        ];
 
 
-        
+
+        var lines = BABYLON.MeshBuilder.CreateTube("lines", {path: myPoints, radius: 0.5, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene)
+        lines.material = mat1;
+
 
         return scene;
     };

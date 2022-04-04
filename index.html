@@ -43,16 +43,18 @@
 
         const scene = new BABYLON.Scene(engine);  
 
-        const camera = new BABYLON.ArcRotateCamera("camera", 1,2,20, new BABYLON.Vector3(0, 0, 0));
+        const camera = new BABYLON.ArcRotateCamera("camera", 0,0,100, new BABYLON.Vector3(0, 0, 0));
         camera.attachControl(canvas, true);
         const light1 = new BABYLON.PointLight("light1", new BABYLON.Vector3(1, 1, 0));
         light1.diffuse = new BABYLON.Color3(1,0,2)
+        light1.intensity = 1;
         const light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(1, 1, 1));
         light2.diffuse = new BABYLON.Color3(3,2,2)
+        light2.intensity = 1;
         const light3 = new BABYLON.PointLight("light3", new BABYLON.Vector3(1, 4, 0));
-        light2.diffuse = new BABYLON.Color3(1,0,0)
-
-        //This is the section i am having difficulty with. I have tried various combinations of the below.
+        light3.diffuse = new BABYLON.Color3(1,0,0)
+        light3.intensity = 1;
+     
         
        const envTex = new BABYLON.CubeTexture("./sky.env", scene);
        scene.environmentTexture = envTex;
@@ -65,33 +67,66 @@
         BABYLON.SceneLoader.ImportMesh("", "./", "Barreljc.glb", scene, function (newMeshes, particleSystems, skeletons) {
 
         camera.target = newMeshes[0];
-        newMeshes[0].position.x = 4;
-        newMeshes[0].position.z = 4;
-        newMeshes[0].position.y = 4;
-        newMeshes[0].scaling = new BABYLON.Vector3(10,10,10);
+        newMeshes[0].position.x = 0;
+        newMeshes[0].position.z = -50;
+        newMeshes[0].position.y = -0;
+        newMeshes[0].scaling = new BABYLON.Vector3(60,60,60);
 
     });
 
 
         const ball =  BABYLON.MeshBuilder.CreateSphere("Ball", {diameterX: 5, diameterY: 4, diameterZ: 6})
         ball.position.x = +5;
+
+        var redball = new BABYLON.StandardMaterial("redball", scene);
+        redball.diffuseColor = new BABYLON.Color3(0.9, 0.02, 0.02);
+        ball.material = redball;
+
+        ball.actionManager = new BABYLON.ActionManager(scene);
+            ball.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+
+                function () {
+                    var blueball = new BABYLON.StandardMaterial("blueball", scene);
+                    blueball.diffuseColor = new BABYLON.Color3(0.5, 0.9, 0.9);
+                    ball.material = blueball;              
+                    
+
+                }));
+
+
+    //    var prepareButton = function (mesh, color, light)
+    //    {
+    //        mesh.actionManager = new BABYLON.ActionManager(scene);
+    //        mesh.actionManager.registerAction(
+    //        new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPickTrigger, mesh, "emissiveColor", new BABYLON.Color3(1, 1, 1), 150)
+    //    )
+
+    //    }
+    //    prepareButton(ball, BABYLON.Color3(1, 1, 1), light3);
+    //    scene.actionManager = new BABYLON.ActionManager(scene);
+      
        
         var mat = new BABYLON.StandardMaterial("", scene);
         mat.diffuseTexture = new BABYLON.Texture("./green.jpg", scene);
 
         const plane =  BABYLON.MeshBuilder.CreatePlane("Plane", {height: 10, width: 5})
-        plane.rotation = new BABYLON.Vector3(1, 1, 2);
+        plane.rotation = new BABYLON.Vector3(1, 0, 2);
         plane.material = mat;
 
         var mat1 = new BABYLON.StandardMaterial("", scene);
         mat1.diffuseTexture = new BABYLON.Texture("./green.jpg", scene);
 
         var myPoints = [
-            new BABYLON.Vector3(0, 3, -1),
+            new BABYLON.Vector3(0, 0, -1),
             new BABYLON.Vector3(1, 4, -2),
             new BABYLON.Vector3(2, 5, -3),
             new BABYLON.Vector3(3, 6, -4),
             new BABYLON.Vector3(4, 7, -5),
+            new BABYLON.Vector3(8, 7, -6),
+        //    new BABYLON.Vector3(10, 3, 4),
+        //    new BABYLON.Vector3(12, 6, 5),
+
         ];
 
 
@@ -99,6 +134,15 @@
         var lines = BABYLON.MeshBuilder.CreateTube("lines", {path: myPoints, radius: 0.5, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene)
         lines.material = mat1;
 
+
+    var pbr = new BABYLON.PBRMaterial("pbr", scene);
+    pbr.albedoTexture = new BABYLON.Texture("./asphalt.jpg", scene);
+
+        var ground = BABYLON.MeshBuilder.CreateBox("ground", {height: 5, width: 1025, depth: 1025}, scene)
+        ground.position = new BABYLON.Vector3(0,-50,0);
+        ground.material = pbr;
+        pbr.roughness = 1;
+      
 
         return scene;
     };

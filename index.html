@@ -82,31 +82,32 @@
         redball.diffuseColor = new BABYLON.Color3(0.9, 0.02, 0.02);
         ball.material = redball;
 
+        
         ball.actionManager = new BABYLON.ActionManager(scene);
             ball.actionManager.registerAction(
-                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
-
+            new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+                          
                 function () {
+                
                     var blueball = new BABYLON.StandardMaterial("blueball", scene);
                     blueball.diffuseColor = new BABYLON.Color3(0.5, 0.9, 0.9);
-                    ball.material = blueball;              
-                    
+                    ball.material = blueball
+                
+            })).then(
+
+                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+                          
+                function () {
+                
+                var redball = new BABYLON.StandardMaterial("redball", scene);
+                redball.diffuseColor = new BABYLON.Color3(0.9, 0.02, 0.02);
+                ball.material = redball;
 
                 }));
+        
+                
 
 
-    //    var prepareButton = function (mesh, color, light)
-    //    {
-    //        mesh.actionManager = new BABYLON.ActionManager(scene);
-    //        mesh.actionManager.registerAction(
-    //        new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPickTrigger, mesh, "emissiveColor", new BABYLON.Color3(1, 1, 1), 150)
-    //    )
-
-    //    }
-    //    prepareButton(ball, BABYLON.Color3(1, 1, 1), light3);
-    //    scene.actionManager = new BABYLON.ActionManager(scene);
-      
-       
         var mat = new BABYLON.StandardMaterial("", scene);
         mat.diffuseTexture = new BABYLON.Texture("./green.jpg", scene);
 
